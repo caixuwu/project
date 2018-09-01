@@ -1,0 +1,110 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>charbox</title>
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'char.css' %}" rel="stylesheet">
+    <script src="{% static "jquery-3.3.1.js" %}"></script>
+    <script src="{% static "bootstrap.min.js" %}"></script>
+    <script src="{% static "char.js" %}"></script>
+</head>
+<body>
+    <div><img src="{% static '2zrdI1g.jpg' %}" style="width: 100%;height: 100%"></div>
+    <div class="chat-container">
+        <div class="left-contact-panel">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#friends_tab" data-toggle="tab">好友列表</a></li>
+                <li><a href="#group_tab" data-toggle="tab">分组列表</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="friends_tab">
+                  {% for friend in My_friend %}
+                    <li contact-type="single" contact-id="{{ friend.id }}" onclick="OpenCharWindow(this)" class="list-group-item">
+                        <span class="badge">14</span>
+                        <span class="contact-name">{{friend.username}}</span>
+                    </li>
+               {% endfor %}
+              </div>
+              <div class="tab-pane" id="group_tab">
+                  {% for group in My_group %}
+                    <li contact-type="group" contact-id="{{ group.id }}" onclick="OpenCharWindow(this)" class="list-group-item">
+                    <span class="badge">14</span>
+                    <span class="contact-name">{{ group.group_name}}</span>
+                </li>
+                {% endfor %}
+
+              </div>
+            </div>
+
+        </div>
+        <div class="right-chat-panel">
+            <div class="chat-box-title" contact-id = '' contact-type="">
+            </div>
+            <div class="chat-box-window">
+            </div>
+            <div class="chat-box-emoj">
+            </div>
+            <div class="chat-box-msg-box">
+                <textarea class="text" name="" id="msg" style="background-color: rgba(255,255,255,0)"></textarea>
+                <button class="btn btn-success" id="btn-success">发送消息</button>
+            </div>
+
+        </div>
+{#        <div class="clear-both"></div>#}
+    </div>
+<script>
+    $("#navbar a[href='{{ request.path }}']").parent().addClass('active');
+        // delegate() 方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理程序，并规定当这些事件发生时运行的函数
+    $('body').delegate('textarea','keydown',function(e){
+        if (e.which==13) {
+            var mag_text=$('textarea').val();
+            // .trim删除字符串的前后空格
+            if ($.trim(mag_text).length >0) {
+                sendMsg(mag_text);
+            }
+            AddSentMsgIntoBox(mag_text);
+            $('textarea').val('');
+        }
+    });
+    function sendMsg(mag_text) {
+        var contact_type=$('.chat-box-title').attr('contact-type');
+        var contact_id=$('.chat-box-title').attr('contact-id');
+        if (contact_type && contact_id) {
+            var msg_item = {
+                "from": "{{ request.user.id }}",
+                "to": contact_id,
+                "type": contact_type,
+                "msg": mag_text,
+            };
+            socket.send(JSON.stringify(msg_item));
+
+        }
+    }
+    function AddSentMsgIntoBox(msg_text){
+        var new_msg_ele = "<div class='msg-item'>" +
+            "<span>"+ "{{request.user.username}}" +"</span>" +
+            "<span>"+new Date().toLocaleTimeString() +"</span>" +
+            "<div class='msg-text'>" + msg_text + "</div>" +
+            "</div>";
+            $(".chat-box-window").append(new_msg_ele);
+            $(".chat-box-window").animate({scrollTop:$('.chat-box-window').height()},1000)
+        }
+
+function OpenCharWindow(ele) {
+    $(ele).addClass('active');
+    //给title赋属性，让其拥有id和type，方便后面调用
+    $(ele).siblings().removeClass('active');
+    var contact_id = $(ele).attr('contact-id');
+    var contact_type = $(ele).attr('contact-type');
+    $('.chat-box-title').attr('contact-type',contact_type);
+    $('.chat-box-title').attr('contact-id',contact_id);
+    //title功能实现
+    var contact_name = $(ele).find('.contact-name').text();
+    var chat_box_title_content='正在跟'+ contact_name +' 聊天';
+    $('.chat-box-title').html(chat_box_title_content)
+}
+</script>
+</body>
+</html>
