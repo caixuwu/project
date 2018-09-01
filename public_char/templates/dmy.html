@@ -1,0 +1,94 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>达摩院登录</title>
+    <link rel='stylesheet' href="{% static 'css/first.css' %}" />
+    
+    <style type="text/css">
+        {% block style %}
+        {% endblock %}
+
+       
+    </style>
+</head>
+<body style='overflow:auto;'>
+    <div><img src="{% static 'images/13.jpg' %}"></div>
+<div>
+
+     <!-- <div class='my_margin' > -->
+        <!-- <div style='position: relative;'> -->
+          <!-- <img src='/static/images/huiyuan.jpg'  />  -->
+            <!-- <img src="{% static 'images/huiyuan.jpg' %}"  /> -->
+            {% block content1 %}
+                <!-- <a href="{% url 'register' %}" class='my_a'>会员注册></a> -->
+            {% endblock %}
+        <!-- </div> -->
+     <!-- </div>  -->
+    <div  class='my_margin_log'>
+        <h1 align="center" style='font-family: 隶书'>达摩聊天室</h1>
+    {% block content2 %}
+        <form action="{% url 'dmy.html' %}" method='post' >
+    {% endblock %}
+        {% csrf_token %}
+            
+            <div >
+                <div class='i1 my_left' >用户名</div>
+                <div class='my_left50'>
+                    <input type='text' class='register ' name='name'  >
+                    <div style="color: red">                 
+                    {{ name_error }}
+                </div>        
+                </div >
+            </div>
+            
+            <div >
+                <div  class='i1 my_left '>密码</div>
+                <div class='my_left50' >
+                    <input type='password' name='passwd' class='register ' placeholder="请输入6-20位号码字符" >
+                    <div style="color: red">                 
+                    {{ passwd_error }}
+                </div>        
+                </div>
+            </div>
+            
+        {% block content3 %}
+                            
+            <div>
+                <div class=' i1 my_left'>
+                        
+                </div>   
+                        
+                <div class='my_left50' > 
+                    
+                        <input type='checkbox' name='remember' value='1' class='isSaved' >
+                        <span class='i3'>记住密码</span> 
+                    
+                        <div style='float:right;margin-left: 70px;'>
+                            <a href='/forget/' target='_blank' class='i3'>忘记密码?</a>
+                            <a href='#' target='_blank' class='i3'>
+                            快捷登录</a>
+                        </div>    
+
+                </div>  
+            </div>                                 
+            <div>
+                <div class='i1 my_left'>
+                        
+                </div>
+                <div   class='my_left50'   >
+                            
+                    <input type='submit'  value='登录' class='log'   />
+                    <div class=' show_border  ' style='float:right;' >
+                            <a href="{% url 'register' %}" target='_blank'  style='text-decoration:none;color:#7bae55;' >注册会员 </a>
+                    </div>
+                </div>
+            </div> 
+        {% endblock %} 
+        </form>
+    </div>
+</div>
+</body>
+</html>

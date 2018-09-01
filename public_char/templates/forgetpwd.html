@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>forgetpwd</title>
+</head>
+<body>
+    <div class="f1 form-box">
+        <h2>忘记密码</h2>
+        <form action="{% url 'forget/' %}" method="post" id="jsFindPwdForm" autocomplete="off">
+            <input type="hidden" name="csrfmiddlewaretoken" value="mymQDzHW12REXIfPMg2mJaLqDfaS1sD5">
+            <div class="form-group marb20">
+                <label>邮   箱</label>
+                <input type="email" id="account" name="email" placeholder="邮箱" class="form-control {% if forget_form.errors.email %}errorput{% endif %}"
+                       value="{% if forget_form.email.value %}{{ forget_form.email.value }}{% endif %}">
+            </div>
+            <div class="form-group captcha1 marb38">
+                <label>验证码</label>
+                {{ forget_form.captcha }}
+            </div>
+                <h4>{{ forget_form.errors.captcha }}</h4>
+                {{ forget_form.errors.email }}
+                {{ msg }}
+            <div class="error btns" id="jsForgetTips"></div>
+            <input type="hidden" name="sms_type" value="1">
+            <input type="btn btn-green" id="jsFindPwdBtn" type="submit" value="提交">
+            <p class="form-p">您还可以<a href="{% url 'dmy.html/' %}">[直接登录]</a>></p>
+        <input type="hidden" name="csrfmiddlewaretoken" value="5I2S11eZJOMUX9QbwYLUIAOshdrdpRcy">
+        </form>
+    </div>
+</body>
+</html>
